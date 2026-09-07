@@ -14,7 +14,7 @@ aws directconnect describe-locations --region us-east-1
 aws directconnect describe-locations --region us-west-2 
 ```
 
-[image alt](https://github.com/DMayrant/Cloud-Migration/blob/main/Cloud%20Migration.jpeg?raw=true)
+![image alt](https://github.com/DMayrant/Cloud-Migration/blob/main/Cloud%20Migration.jpeg?raw=true)
 
 # AWS Organizations 🗓️
 ```bash
