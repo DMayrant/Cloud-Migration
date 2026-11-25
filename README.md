@@ -39,3 +39,8 @@ terraform validate
 terraform plan 
 terraform apply
 ```
+
+# MGN installer Check
+```bash 
+aws sts get-caller-identity --query Arn --output text
+```

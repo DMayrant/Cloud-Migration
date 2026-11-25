@@ -8,9 +8,9 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-###################
+#######################
 # Migrated Workloads
-###################
+#######################
 
 variable "migration_ami_id" {
   description = "AMI used to represent the migrated application servers"
@@ -102,3 +102,58 @@ variable "enable_direct_connect" {
   type        = bool
   default     = false
 }
+
+###############
+# MGN Variables
+################
+
+variable "mgn_installer_role_name" {
+  description = "Name of the existing IAM role whose temporary credentials are used to install replication agents."
+  type        = string
+}
+
+variable "mgn_installer_trusted_principal_arn" {
+  description = "ARN of the existing IAM principal allowed to assume the installer role."
+  type        = string
+}
+
+variable "mgn_endpoint_subnet_ids" {
+  description = "Staging VPC subnet IDs for endpoint interfaces. Choose at most one subnet per Availability Zone."
+  type        = set(string)
+}
+
+variable "mgn_endpoint_client_ipv4_cidrs" {
+  description = "IPv4 CIDRs allowed to reach the MGN endpoint, including on-premises source networks and staging clients that use it."
+  type        = set(string)
+}
+
+variable "mgn_vpc_cidr" {
+  type = string
+}
+
+variable "mgn_staging_subnets" {
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+  }))
+}
+
+##########
+# AWS VPN's 
+##########
+
+variable "vpn_a_customer_gateway" {
+  description = "Public IPv4 address and BGP ASN for on-premises edge router A."
+  type = object({
+    public_ip = string
+    bgp_asn   = number
+  })
+}
+variable "vpn_b_customer_gateway" {
+  description = "Public IPv4 address and BGP ASN for edge router B."
+  type = object({
+    public_ip = string
+    bgp_asn   = number
+  })
+}
+

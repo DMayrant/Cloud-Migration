@@ -19,8 +19,8 @@ output "vpc_cidr" {
 output "public_subnet_ids" {
   description = "IDs of the public subnets"
   value = [
-    aws_subnet.public.id,
-    aws_subnet.public_2.id
+    aws_subnet.public_a.id,
+    aws_subnet.public_b.id
   ]
 }
 
@@ -31,7 +31,8 @@ output "private_subnet_id" {
 
 output "mgn_staging_subnet_id" {
   description = "ID of the MGN staging subnet"
-  value       = aws_subnet.mgn_staging.id
+  value       = [aws_subnet.mgn_staging_a.id,
+                 aws_subnet.mgn_staging_b.id]
 }
 
 ########################################
@@ -110,4 +111,24 @@ output "secondary_dx_connection_id" {
 output "ssm_endpoint_id" {
   description = "ID of the SSM VPC endpoint"
   value       = aws_vpc_endpoint.ssm.id
+}
+
+############
+# MGN Endpoint
+#############
+
+output "mgn_vpc_endpoint_dns_names" {
+  description = "AWS-generated endpoint DNS names. Use the regional vpce hostname with the on-premises installer."
+  value       = [for entry in aws_vpc_endpoint.mgn.dns_entry : entry.dns_name]
+}
+
+################
+# VPN Connection
+################
+
+output "vpn_connection_ids" {
+  description = "AWS Site-to-Site VPN connection IDs keyed by VPN name."
+  value = {
+    for name, connection in aws_vpn_connection.on_prem : name => connection.id
+  }
 }

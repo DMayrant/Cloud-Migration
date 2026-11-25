@@ -193,3 +193,23 @@ resource "aws_vpc_security_group_ingress_rule" "ssm_https" {
   to_port     = 443
   ip_protocol = "tcp"
 }
+
+#####################
+# MGN Security Group
+#######################
+
+resource "aws_security_group" "mgn_endpoint" {
+  name_prefix = "mgn-endpoint-"
+  description = "HTTPS access to the MGN interface endpoint"
+  vpc_id      = aws_vpc.migration.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "mgn_https" {
+  for_each = var.mgn_endpoint_client_ipv4_cidrs
+
+  security_group_id = aws_security_group.mgn_endpoint.id
+  cidr_ipv4         = each.value
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+}

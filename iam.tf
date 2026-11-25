@@ -135,3 +135,24 @@ data "aws_iam_principal_policy_simulation" "mgn_agent_permissions" {
     aws_iam_user_policy_attachment.mgn_agent_installation
   ]
 }
+
+###############
+# MGN Installer
+###############
+
+data "aws_partition" "mgn" {}
+
+resource "aws_iam_role" "mgn_installer" {
+  name = "MGNAgentInstaller"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = "sts:AssumeRole"
+      Principal = {
+        AWS = var.mgn_installer_trusted_principal_arn
+      }
+    }]
+  })
+}
