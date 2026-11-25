@@ -50,3 +50,20 @@ resource "aws_vpc_endpoint" "ssmmessages" {
     Name = "ssmmessages-endpoint"
   }
 }
+
+################
+# MGN endpoint
+################
+
+resource "aws_vpc_endpoint" "mgn" {
+  vpc_id              = aws_vpc.migration.id
+  service_name        = "com.amazonaws.${var.aws_region}.mgn"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private.id]
+  security_group_ids  = [aws_security_group.mgn_endpoint.id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "mgn-endpoint"
+  }
+}

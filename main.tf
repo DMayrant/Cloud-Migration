@@ -29,7 +29,7 @@ resource "aws_internet_gateway" "migration" {
 # Public Subnet for NAT/ALB
 #############################
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.migration.id
   cidr_block              = "10.81.0.0/24"
   availability_zone       = "us-east-1a"
@@ -40,7 +40,7 @@ resource "aws_subnet" "public" {
   }
 }
 
-resource "aws_subnet" "public_2" {
+resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.migration.id
   cidr_block              = "10.81.10.0/24"
   availability_zone       = "us-east-1b"
@@ -93,7 +93,7 @@ resource "aws_route" "public_internet" {
 ##############################
 
 resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+  subnet_id      = aws_subnet.public_a.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -102,7 +102,7 @@ resource "aws_route_table_association" "public" {
 #####################################
 
 resource "aws_route_table_association" "public_2" {
-  subnet_id      = aws_subnet.public_2.id
+  subnet_id      = aws_subnet.public_b.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -123,25 +123,40 @@ resource "aws_route_table" "private" {
 # Staging Subnet
 ################
 
-resource "aws_subnet" "mgn_staging" {
+resource "aws_subnet" "mgn_staging_a" {
   vpc_id            = aws_vpc.migration.id
   cidr_block        = "10.81.90.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "migration-staging-subnet"
+    Name = "migration-staging-subnet-a"
   }
 }
 
+resource "aws_subnet" "mgn_staging_b" {
+  vpc_id            = aws_vpc.migration.id
+  cidr_block        = "10.81.100.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "migration-staging-subnet-b"
+  }
+}
 
 ############################################################
 # Associate Private Route Table with Staging Subnet
 ############################################################
 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.mgn_staging.id
+resource "aws_route_table_association" "private_a" {
+  subnet_id      = aws_subnet.mgn_staging_a.id
   route_table_id = aws_route_table.private.id
 }
+
+resource "aws_route_table_association" "private_b" {
+  subnet_id      = aws_subnet.mgn_staging_b.id
+  route_table_id = aws_route_table.private.id
+}
+
 
 ###############
 # VPC Flow Logs
@@ -176,7 +191,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "migration" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.public_a.id
 
   depends_on = [
     aws_internet_gateway.migration

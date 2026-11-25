@@ -44,7 +44,7 @@ resource "aws_dx_connection" "primary" {
   count = var.enable_direct_connect ? 1 : 0
 
   name      = "migration-dx-primary"
-  bandwidth = "1Gbps"
+  bandwidth = "10Gbps"
   location  = var.dx_primary_location
 
   tags = {
@@ -81,7 +81,7 @@ resource "aws_dx_connection" "secondary" {
   count = var.enable_direct_connect ? 1 : 0
 
   name      = "migration-dx-secondary"
-  bandwidth = "1Gbps"
+  bandwidth = "10Gbps"
   location  = var.dx_secondary_location
 
   tags = {

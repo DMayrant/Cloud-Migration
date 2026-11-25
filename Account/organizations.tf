@@ -16,9 +16,9 @@ resource "aws_organizations_organization" "main" {
     "SERVICE_CONTROL_POLICY"
 
   ]
-
+ # Prevents Accidental Deletion of AWS Organizations
   lifecycle {
-    prevent_destroy = true # Prevents Accidental Deletion of AWS Organizations
+    prevent_destroy = true
   }
 }
 
